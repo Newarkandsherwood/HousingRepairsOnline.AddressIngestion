@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
@@ -24,7 +25,7 @@ namespace HousingRepairsOnline.AddressIngestion
                 databaseName : "%DatabaseName%",
                 collectionName: "%CollectionName%",
                 ConnectionStringSetting = "CosmosDBConnection")]
-            IAsyncCollector<CommunalAddresses> communalAddressesOut,
+            IAsyncCollector<CommunalAddress> communalAddressesOut,
             [CosmosDB(
                 databaseName : "%DatabaseName%",
                 collectionName: "%CollectionName%",
@@ -55,12 +56,10 @@ namespace HousingRepairsOnline.AddressIngestion
         
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.UtcNow}");
 
-            using var reader = new StreamReader(inputStream);
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-            var records = csv.GetRecords<CommunalAddresses>();
-            foreach (var record in records)
+            var addresses = CSVInputStreamHelper.MapToCommunalAddresses(inputStream);
+            foreach (var address in addresses)
             {
-                await communalAddressesOut.AddAsync(record);
+                await communalAddressesOut.AddAsync(address);
             }
         }
     }

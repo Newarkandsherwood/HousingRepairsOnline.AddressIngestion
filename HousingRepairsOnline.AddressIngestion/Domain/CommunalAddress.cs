@@ -2,7 +2,7 @@ using CsvHelper.Configuration.Attributes;
 
 namespace HousingRepairsOnline.AddressIngestion.Domain
 {
-    public class CommunalAddresses
+    public class CommunalAddress
     {
         [Index(0)]
         public int PlaceReference { get; set; }
