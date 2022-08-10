@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using CsvHelper;
 using HousingRepairsOnline.AddressIngestion.Domain;
 using HousingRepairsOnline.AddressIngestion.Helpers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.WebJobs;
@@ -18,7 +19,7 @@ namespace HousingRepairsOnline.AddressIngestion
     public static class Function
     {
         [FunctionName("IngestAddresses")]
-        public static async Task RunAsync(
+        public static async Task<IActionResult> RunAsync(
             [TimerTrigger("0 */1 * * * *")] TimerInfo myTimer,
             [Blob("%CommunalBlobPath%", FileAccess.Read,  Connection = "AzureWebJobsStorage")] Stream inputStream,
             [CosmosDB(
@@ -61,6 +62,8 @@ namespace HousingRepairsOnline.AddressIngestion
             {
                 await communalAddressesOut.AddAsync(address);
             }
+
+            return new OkObjectResult("Addresses Imported Successfully");
         }
     }
 }
