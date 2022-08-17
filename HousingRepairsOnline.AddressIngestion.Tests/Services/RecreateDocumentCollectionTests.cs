@@ -23,7 +23,7 @@ public class RecreateDocumentCollectionTests
     [Fact]
     public async Task GivenRecreateDocumentCollectionThenDeleteDocumentCollectionAsyncIsCalled()
     {
-        await _recreateDocumentCollection.Execute(It.IsAny<Uri>(), It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>());
+        await _recreateDocumentCollection.Execute(It.IsAny<Uri>(), It.IsAny<Uri>(), "collectionName", "partitionKey");
         _documentClientMock.Verify(x => x.DeleteDocumentCollectionAsync(It.IsAny<Uri>(), It.IsAny<RequestOptions>()), Times.Once);
     }
     [Fact]
