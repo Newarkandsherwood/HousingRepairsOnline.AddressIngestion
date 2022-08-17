@@ -1,8 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HousingRepairsOnline.AddressIngestion", "HousingRepairsOnline.AddressIngestion\HousingRepairsOnline.AddressIngestion.csproj", "{FD0417F5-C977-417F-AF2D-904A135F5A31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HousingRepairsOnline.AddressIngestion.Tests", "HousingRepairsOnline.AddressIngestion.Tests\HousingRepairsOnline.AddressIngestion.Tests.csproj", "{A4073281-A9C1-4E38-8CED-C10A1E25E262}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HousingRepairsOnline.AddressIngestion.Tests", "HousingRepairsOnline.AddressIngestion.Tests\HousingRepairsOnline.AddressIngestion.Tests.csproj", "{F3A12B9A-CFA0-4B75-8EEC-E699106333B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +15,9 @@ Global
 		{FD0417F5-C977-417F-AF2D-904A135F5A31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD0417F5-C977-417F-AF2D-904A135F5A31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD0417F5-C977-417F-AF2D-904A135F5A31}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A4073281-A9C1-4E38-8CED-C10A1E25E262}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A4073281-A9C1-4E38-8CED-C10A1E25E262}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A4073281-A9C1-4E38-8CED-C10A1E25E262}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A4073281-A9C1-4E38-8CED-C10A1E25E262}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3A12B9A-CFA0-4B75-8EEC-E699106333B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3A12B9A-CFA0-4B75-8EEC-E699106333B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3A12B9A-CFA0-4B75-8EEC-E699106333B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3A12B9A-CFA0-4B75-8EEC-E699106333B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

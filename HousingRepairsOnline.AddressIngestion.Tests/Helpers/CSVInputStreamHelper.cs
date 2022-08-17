@@ -1,16 +1,10 @@
-using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Xunit;
-using HousingRepairsOnline.AddressIngestion;
 using HousingRepairsOnline.AddressIngestion.Domain;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
-using Moq;
-using Microsoft.Extensions.Logging;
-using Microsoft.Azure.WebJobs;
 
-namespace HousingRepairsOnline.AddressIngestion.Helpers.xUnitTests
+namespace HousingRepairsOnline.AddressIngestion.Helpers
 {
     public class CSVInputStreamHelperTests
     {
