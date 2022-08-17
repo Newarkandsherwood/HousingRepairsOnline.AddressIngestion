@@ -18,25 +18,27 @@ public class InsertAddressesToCosmosDBTests
     public InsertAddressesToCosmosDBTests()
     {
         _collectorMock = new Mock<IAsyncCollector<CommunalAddress>>();
-        _insertAddessesToCosmosDB = new InsertAddressesToCosmosDB(_collectorMock.Object);    
+        _insertAddessesToCosmosDB = new InsertAddressesToCosmosDB(_collectorMock.Object);
     }
     [Fact]
     public async Task GivenCommunalAddressesWhenInsertAddressesToCosmosDBThenAddAsyncIsCalled()
     {
         var mockCommunalAddress = new CommunalAddress
         {
-            AddressLine = "AddressLine", PlaceReference = 1, PostCode = "AddressLine"
+            AddressLine = "AddressLine",
+            PlaceReference = 1,
+            PostCode = "AddressLine"
         };
         var addresses = new List<CommunalAddress> { mockCommunalAddress };
         await _insertAddessesToCosmosDB.Execute(addresses);
-        _collectorMock.Verify(x => x.AddAsync(mockCommunalAddress, It.IsAny<CancellationToken>()),Times.AtLeastOnce);
+        _collectorMock.Verify(x => x.AddAsync(mockCommunalAddress, It.IsAny<CancellationToken>()), Times.AtLeastOnce);
     }
     [Fact]
     public async Task GivenEmptyCommunalAddressesWhenInsertAddressesToCosmosDBThenAddAsyncIsCalled()
     {
         var mockCommunalAddress = new CommunalAddress();
         var addresses = new List<CommunalAddress> { mockCommunalAddress };
-       
+
         Func<Task> act = () => _insertAddessesToCosmosDB.Execute(addresses);
 
         //Assert
@@ -48,9 +50,9 @@ public class InsertAddressesToCosmosDBTests
         var mockCommunalAddress1 = new CommunalAddress { AddressLine = "AddressLine", PlaceReference = 1, PostCode = "AddressLine" };
         var mockCommunalAddress2 = new CommunalAddress { AddressLine = "AddressLin2", PlaceReference = 2, PostCode = "AddressLine2" };
         var mockCommunalAddress3 = new CommunalAddress { AddressLine = "AddressLine3", PlaceReference = 3, PostCode = "AddressLine3" };
-        
+
         var addresses = new List<CommunalAddress> { mockCommunalAddress1, mockCommunalAddress2, mockCommunalAddress3 };
         await _insertAddessesToCosmosDB.Execute(addresses);
-        _collectorMock.Verify(x => x.AddAsync(It.IsAny<CommunalAddress>(), It.IsAny<CancellationToken>()),Times.Exactly(3));
+        _collectorMock.Verify(x => x.AddAsync(It.IsAny<CommunalAddress>(), It.IsAny<CancellationToken>()), Times.Exactly(3));
     }
 }

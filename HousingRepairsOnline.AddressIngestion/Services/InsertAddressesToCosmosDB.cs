@@ -22,7 +22,7 @@ public class InsertAddressesToCosmosDB
             Guard.Against.NullOrEmpty(address.AddressLine);
             Guard.Against.NullOrEmpty(address.PostCode);
             Guard.Against.Null(address.PlaceReference);
-            
+
             await communalAddressesOut.AddAsync(address);
         }
     }

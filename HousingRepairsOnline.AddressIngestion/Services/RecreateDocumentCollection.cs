@@ -16,11 +16,11 @@ public class RecreateDocumentCollection
         this.documentClient = documentClient;
     }
 
-    public async Task Execute(Uri databaseUri, Uri collectionUri,  string collectionName, string partitionKey)
+    public async Task Execute(Uri databaseUri, Uri collectionUri, string collectionName, string partitionKey)
     {
         Guard.Against.NullOrEmpty(collectionName, nameof(collectionName));
         Guard.Against.NullOrEmpty(partitionKey, nameof(partitionKey));
-        
+
 
         await documentClient.DeleteDocumentCollectionAsync(collectionUri);
         await documentClient.CreateDocumentCollectionAsync(databaseUri, new DocumentCollection
@@ -29,7 +29,7 @@ public class RecreateDocumentCollection
             PartitionKey = new PartitionKeyDefinition
             {
                 Paths = new Collection<string> { partitionKey }
-            } 
+            }
         });
     }
 }

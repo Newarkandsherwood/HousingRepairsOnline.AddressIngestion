@@ -24,7 +24,7 @@ public class RecreateDocumentCollectionTests
     public async Task GivenRecreateDocumentCollectionThenDeleteDocumentCollectionAsyncIsCalled()
     {
         await _recreateDocumentCollection.Execute(It.IsAny<Uri>(), It.IsAny<Uri>(), It.IsAny<string>(), It.IsAny<string>());
-        _documentClientMock.Verify(x=> x.DeleteDocumentCollectionAsync(It.IsAny<Uri>(),It.IsAny<RequestOptions>()),Times.Once);
+        _documentClientMock.Verify(x => x.DeleteDocumentCollectionAsync(It.IsAny<Uri>(), It.IsAny<RequestOptions>()), Times.Once);
     }
     [Fact]
     public async Task GivenRecreateDocumentCollectionThenCreateDocumentCollectionAsyncIsCalled()
@@ -32,13 +32,13 @@ public class RecreateDocumentCollectionTests
         var databaseUri = new Uri("http://www.google.com/");
 
         await _recreateDocumentCollection.Execute(databaseUri, It.IsAny<Uri>(), "collectionName", "partitionKey");
-        _documentClientMock.Verify(x=> x.CreateDocumentCollectionAsync(databaseUri, It.IsAny<DocumentCollection>(),null),Times.Once);
+        _documentClientMock.Verify(x => x.CreateDocumentCollectionAsync(databaseUri, It.IsAny<DocumentCollection>(), null), Times.Once);
     }
 
     [Fact]
     public async Task GiveNoCollectionNameThenUriFormatExceptionIsThrown()
     {
-     
+
         Func<Task> act = () => _recreateDocumentCollection.Execute(It.IsAny<Uri>(), It.IsAny<Uri>(), null, It.IsAny<string>());
 
         //Assert
@@ -47,7 +47,7 @@ public class RecreateDocumentCollectionTests
     [Fact]
     public async Task GiveEmptyCollectionNameThenUriFormatExceptionIsThrown()
     {
-     
+
         Func<Task> act = () => _recreateDocumentCollection.Execute(It.IsAny<Uri>(), It.IsAny<Uri>(), "", It.IsAny<string>());
 
         //Assert
@@ -56,7 +56,7 @@ public class RecreateDocumentCollectionTests
     [Fact]
     public async Task GiveNoPartitionKeyThenUriFormatExceptionIsThrown()
     {
-     
+
         Func<Task> act = () => _recreateDocumentCollection.Execute(It.IsAny<Uri>(), It.IsAny<Uri>(), It.IsAny<string>(), null);
 
         //Assert
@@ -65,7 +65,7 @@ public class RecreateDocumentCollectionTests
     [Fact]
     public async Task GiveEmptyPartitionKeyThenUriFormatExceptionIsThrown()
     {
-     
+
         Func<Task> act = () => _recreateDocumentCollection.Execute(It.IsAny<Uri>(), It.IsAny<Uri>(), It.IsAny<string>(), "");
 
         //Assert

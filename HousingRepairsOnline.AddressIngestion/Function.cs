@@ -21,7 +21,7 @@ namespace HousingRepairsOnline.AddressIngestion
         [FunctionName("IngestAddresses")]
         public static async Task RunAsync(
             [TimerTrigger("0 */1 * * * *")] TimerInfo myTimer,
-            [Blob("%CommunalBlobPath%", FileAccess.Read,  Connection = "AzureWebJobsStorage")] Stream inputStream,
+            [Blob("%CommunalBlobPath%", FileAccess.Read, Connection = "AzureWebJobsStorage")] Stream inputStream,
             [CosmosDB(
                 databaseName : "%DatabaseName%",
                 collectionName: "%CollectionName%",
@@ -37,7 +37,7 @@ namespace HousingRepairsOnline.AddressIngestion
             var collectionName = EnvironmentVariableHelper.GetEnvironmentVariable("CollectionName");
             var partitionKey = EnvironmentVariableHelper.GetEnvironmentVariable("PartitionKey");
             var communalBlobPath = EnvironmentVariableHelper.GetEnvironmentVariable("CommunalBlobPath");
-            
+
             if (inputStream == null)
             {
                 throw new FileLoadException($"File '{communalBlobPath}' does not exist in the container");
