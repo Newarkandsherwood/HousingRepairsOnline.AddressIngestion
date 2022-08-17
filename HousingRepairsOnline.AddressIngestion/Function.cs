@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using CsvHelper;
 using HousingRepairsOnline.AddressIngestion.Domain;
 using HousingRepairsOnline.AddressIngestion.Helpers;
+using HousingRepairsOnline.AddressIngestion.Services;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.WebJobs;
@@ -35,32 +36,23 @@ namespace HousingRepairsOnline.AddressIngestion
             var databaseName = EnvironmentVariableHelper.GetEnvironmentVariable("DatabaseName");
             var collectionName = EnvironmentVariableHelper.GetEnvironmentVariable("CollectionName");
             var partitionKey = EnvironmentVariableHelper.GetEnvironmentVariable("PartitionKey");
-            var collectionUri = UriFactory.CreateDocumentCollectionUri(databaseName, collectionName);
             var communalBlobPath = EnvironmentVariableHelper.GetEnvironmentVariable("CommunalBlobPath");
             
             if (inputStream == null)
             {
                 throw new FileLoadException($"File '{communalBlobPath}' does not exist in the container");
             }
-        
+
+            var recreateDocumentCollection = new RecreateDocumentCollection(client);
+            var collectionUri = UriFactory.CreateDocumentCollectionUri(databaseName, collectionName);
             var databaseUri = UriFactory.CreateDatabaseUri(databaseName);
-            await client.DeleteDocumentCollectionAsync(collectionUri);
-            await client.CreateDocumentCollectionAsync(databaseUri, new DocumentCollection()
-            {
-                Id = collectionName,
-                PartitionKey = new PartitionKeyDefinition
-                {
-                    Paths = new Collection<string> { partitionKey }
-                } 
-            });
-        
+            await recreateDocumentCollection.Execute(databaseUri, collectionUri, collectionName, partitionKey);
+
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.UtcNow}");
 
             var addresses = CSVInputStreamHelper.MapToCommunalAddresses(inputStream);
-            foreach (var address in addresses)
-            {
-                await communalAddressesOut.AddAsync(address);
-            }
+            var insertAddressesToCosmosDB = new InsertAddressesToCosmosDB(communalAddressesOut);
+            await insertAddressesToCosmosDB.Execute(addresses);
         }
     }
 }
