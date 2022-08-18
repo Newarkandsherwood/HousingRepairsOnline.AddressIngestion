@@ -22,7 +22,7 @@ jobs:
       - name: Install dotnet format
         run: dotnet tool update --global dotnet-format
       - name: Run dotnet format
-        run: dotnet format --check --verbosity diagnostic
+        run: dotnet format --verify-no-changes HousingRepairsOnline.AddressIngestion.sln
 
   test:
     name: Test
