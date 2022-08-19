@@ -7,7 +7,7 @@ using HousingRepairsOnline.AddressIngestion.Domain;
 
 namespace HousingRepairsOnline.AddressIngestion.Helpers;
 
-public class CSVInputStreamHelper
+public static class CsvInputStreamHelper
 {
     public static IEnumerable<CommunalAddress> MapToCommunalAddresses(Stream inputStream)
     {

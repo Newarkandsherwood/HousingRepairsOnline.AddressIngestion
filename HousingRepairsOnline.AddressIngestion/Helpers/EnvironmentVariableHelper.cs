@@ -2,7 +2,7 @@ using System;
 
 namespace HousingRepairsOnline.AddressIngestion.Helpers;
 
-public class EnvironmentVariableHelper
+public static class EnvironmentVariableHelper
 {
     public static string GetEnvironmentVariable(string name)
     {

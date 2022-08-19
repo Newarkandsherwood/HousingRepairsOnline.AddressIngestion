@@ -13,12 +13,12 @@ namespace HousingRepairsOnline.AddressIngestion.Tests.Services;
 public class InsertAddressesToCosmosDBTests
 {
     private readonly Mock<IAsyncCollector<CommunalAddress>> _collectorMock;
-    private readonly InsertAddressesToCosmosDB _insertAddessesToCosmosDB;
+    private readonly InsertAddressesToCosmosDb _insertAddessesToCosmosDB;
 
     public InsertAddressesToCosmosDBTests()
     {
         _collectorMock = new Mock<IAsyncCollector<CommunalAddress>>();
-        _insertAddessesToCosmosDB = new InsertAddressesToCosmosDB(_collectorMock.Object);
+        _insertAddessesToCosmosDB = new InsertAddressesToCosmosDb(_collectorMock.Object);
     }
     [Fact]
     public async Task GivenCommunalAddressesWhenInsertAddressesToCosmosDBThenAddAsyncIsCalled()

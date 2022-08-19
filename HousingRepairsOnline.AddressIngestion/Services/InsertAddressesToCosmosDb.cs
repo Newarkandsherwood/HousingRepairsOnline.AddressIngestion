@@ -6,11 +6,11 @@ using Microsoft.Azure.WebJobs;
 
 namespace HousingRepairsOnline.AddressIngestion.Services;
 
-public class InsertAddressesToCosmosDB
+public class InsertAddressesToCosmosDb
 {
     private readonly IAsyncCollector<CommunalAddress> communalAddressesOut;
 
-    public InsertAddressesToCosmosDB(IAsyncCollector<CommunalAddress> communalAddressesOut)
+    public InsertAddressesToCosmosDb(IAsyncCollector<CommunalAddress> communalAddressesOut)
     {
         this.communalAddressesOut = communalAddressesOut;
     }

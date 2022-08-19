@@ -44,8 +44,8 @@ namespace HousingRepairsOnline.AddressIngestion
 
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.UtcNow}");
 
-            var addresses = CSVInputStreamHelper.MapToCommunalAddresses(inputStream);
-            var insertAddressesToCosmosDB = new InsertAddressesToCosmosDB(communalAddressesOut);
+            var addresses = CsvInputStreamHelper.MapToCommunalAddresses(inputStream);
+            var insertAddressesToCosmosDB = new InsertAddressesToCosmosDb(communalAddressesOut);
             await insertAddressesToCosmosDB.Execute(addresses);
         }
     }

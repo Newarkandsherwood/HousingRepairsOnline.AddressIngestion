@@ -19,7 +19,7 @@ namespace HousingRepairsOnline.AddressIngestion.Helpers
 
             using (var test_Stream = new MemoryStream(Encoding.UTF8.GetBytes(csvTextFile)))
             {
-                var result = CSVInputStreamHelper.MapToCommunalAddresses(test_Stream);
+                var result = CsvInputStreamHelper.MapToCommunalAddresses(test_Stream);
                 Assert.True(result.ToList().Count() == 3);
             }
         }
@@ -35,7 +35,7 @@ namespace HousingRepairsOnline.AddressIngestion.Helpers
 
             using (var test_Stream = new MemoryStream(Encoding.UTF8.GetBytes(csvTextFile)))
             {
-                var result = CSVInputStreamHelper.MapToCommunalAddresses(test_Stream);
+                var result = CsvInputStreamHelper.MapToCommunalAddresses(test_Stream);
                 Assert.True(result.FirstOrDefault()?.GetType() == typeof(CommunalAddress));
             }
         }
