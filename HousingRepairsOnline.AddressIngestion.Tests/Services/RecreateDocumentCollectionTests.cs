@@ -1,7 +1,5 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using FluentAssertions;
 using HousingRepairsOnline.AddressIngestion.Services;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;

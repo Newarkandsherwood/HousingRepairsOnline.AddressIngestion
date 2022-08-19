@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
 
 namespace HousingRepairsOnline.AddressIngestion.Services;
 
