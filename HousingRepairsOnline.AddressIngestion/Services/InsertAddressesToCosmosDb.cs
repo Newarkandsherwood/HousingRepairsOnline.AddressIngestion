@@ -1,29 +1,29 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
-using HousingRepairsOnline.AddressIngestion.Domain;
 using Microsoft.Azure.WebJobs;
+using HACT.Dtos;
 
 namespace HousingRepairsOnline.AddressIngestion.Services;
 
 public class InsertAddressesToCosmosDb
 {
-    private readonly IAsyncCollector<CommunalAddress> communalAddressesOut;
+    private readonly IAsyncCollector<PropertyAddress> propertyAddressesOut;
 
-    public InsertAddressesToCosmosDb(IAsyncCollector<CommunalAddress> communalAddressesOut)
+    public InsertAddressesToCosmosDb(IAsyncCollector<PropertyAddress> propertyAddressesOut)
     {
-        this.communalAddressesOut = communalAddressesOut;
+        this.propertyAddressesOut = propertyAddressesOut;
     }
 
-    public async Task Execute(IEnumerable<CommunalAddress> addresses)
+    public async Task Execute(IEnumerable<PropertyAddress> propertyAddresses )
     {
-        foreach (var address in addresses)
+        foreach (var propertyAddress in propertyAddresses)
         {
-            Guard.Against.NullOrEmpty(address.AddressLine);
-            Guard.Against.NullOrEmpty(address.PostCode);
-            Guard.Against.Null(address.PlaceReference);
+            Guard.Against.NullOrEmpty(propertyAddress.AddressLine);
+            Guard.Against.NullOrEmpty(propertyAddress.PostalCode);
+            Guard.Against.Null(propertyAddress.Reference);
 
-            await communalAddressesOut.AddAsync(address);
+            await propertyAddressesOut.AddAsync(propertyAddress);
         }
     }
 }

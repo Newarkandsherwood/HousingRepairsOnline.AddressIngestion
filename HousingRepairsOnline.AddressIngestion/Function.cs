@@ -1,12 +1,12 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using HousingRepairsOnline.AddressIngestion.Domain;
 using HousingRepairsOnline.AddressIngestion.Helpers;
 using HousingRepairsOnline.AddressIngestion.Services;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
+using HACT.Dtos;
 
 namespace HousingRepairsOnline.AddressIngestion
 {
@@ -15,27 +15,28 @@ namespace HousingRepairsOnline.AddressIngestion
         [FunctionName("IngestAddresses")]
         public static async Task RunAsync(
             [TimerTrigger("0 */1 * * * *")] TimerInfo myTimer,
-            [Blob("%CommunalBlobPath%", FileAccess.Read, Connection = "AzureWebJobsStorage")] Stream inputStream,
+            [Blob("%BlobPath%", FileAccess.Read, Connection = "AzureWebJobsStorage")] Stream inputStream,
             [CosmosDB(
                 databaseName : "%DatabaseName%",
                 collectionName: "%CollectionName%",
                 ConnectionStringSetting = "CosmosDBConnection")]
-            IAsyncCollector<CommunalAddress> communalAddressesOut,
+            IAsyncCollector<PropertyAddress> propertyAddressesOut,
             [CosmosDB(
                 databaseName : "%DatabaseName%",
                 collectionName: "%CollectionName%",
                 ConnectionStringSetting = "CosmosDBConnection")] DocumentClient client,
             ILogger log)
         {
-            var databaseName = EnvironmentVariableHelper.GetEnvironmentVariable("DatabaseName");
-            var collectionName = EnvironmentVariableHelper.GetEnvironmentVariable("CollectionName");
-            var partitionKey = EnvironmentVariableHelper.GetEnvironmentVariable("PartitionKey");
-            var communalBlobPath = EnvironmentVariableHelper.GetEnvironmentVariable("CommunalBlobPath");
+            var blobPath = EnvironmentVariableHelper.GetEnvironmentVariable("BlobPath");
 
             if (inputStream == null)
             {
-                throw new FileLoadException($"File '{communalBlobPath}' does not exist in the container");
+                throw new FileLoadException($"File '{blobPath}' does not exist in the container");
             }
+
+            var databaseName = EnvironmentVariableHelper.GetEnvironmentVariable("DatabaseName");
+            var collectionName = EnvironmentVariableHelper.GetEnvironmentVariable("CollectionName");
+            var partitionKey = EnvironmentVariableHelper.GetEnvironmentVariable("PartitionKey");
 
             var recreateDocumentCollection = new RecreateDocumentCollection(client);
             var collectionUri = UriFactory.CreateDocumentCollectionUri(databaseName, collectionName);
@@ -44,9 +45,10 @@ namespace HousingRepairsOnline.AddressIngestion
 
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.UtcNow}");
 
-            var addresses = CsvInputStreamHelper.MapToCommunalAddresses(inputStream);
-            var insertAddressesToCosmosDB = new InsertAddressesToCosmosDb(communalAddressesOut);
-            await insertAddressesToCosmosDB.Execute(addresses);
+            var addresses = Mapper.CsvInputStreamToAddresses(inputStream);
+            var propertyAddresses = Mapper.ToHactPropertyAddresses(addresses);
+            var insertAddressesToCosmosDB = new InsertAddressesToCosmosDb(propertyAddressesOut);
+            await insertAddressesToCosmosDB.Execute(propertyAddresses);
         }
     }
 }
