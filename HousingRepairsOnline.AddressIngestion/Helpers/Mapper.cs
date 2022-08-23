@@ -1,30 +1,27 @@
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using CsvHelper;
-using HousingRepairsOnline.AddressIngestion.Domain;
-using HACT.Dtos;
-
-namespace HousingRepairsOnline.AddressIngestion.Helpers;
-
-using Address = Domain.Address;
-
-public static class Mapper
+namespace HousingRepairsOnline.AddressIngestion.Helpers
 {
-    public static IEnumerable<Address> CsvInputStreamToAddresses(Stream inputStream)
-    {
-        using var reader = new StreamReader(inputStream);
-        using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-        return csv.GetRecords<Address>().ToList();
-    }
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using CsvHelper;
+    using HACT.Dtos;
 
-    public static IEnumerable<PropertyAddress> ToHactPropertyAddresses(IEnumerable<Address> addresses)
+    using Address = Domain.Address;
+
+    public static class Mapper
     {
-        return (from address in addresses
-            let propertyReference = address.PlaceReference == null
-                ? null
-                : new Reference { ID = address.PlaceReference.ToString(), AllocatedBy = "Capita", }
-            select new PropertyAddress { AddressLine = new[] { address.AddressLine }, PostalCode = address.PostCode, Reference = propertyReference }).ToList();
+        public static IEnumerable<Address> CsvInputStreamToAddresses(Stream inputStream)
+        {
+            using var reader = new StreamReader(inputStream);
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+            return csv.GetRecords<Address>().ToList();
+        }
+
+        public static IEnumerable<PropertyAddress> ToHactPropertyAddresses(IEnumerable<Address> addresses) => (from address in addresses
+                                                                                                               let propertyReference = address.PlaceReference == null
+                                                                                                                   ? null
+                                                                                                                   : new Reference { ID = address.PlaceReference.ToString(), AllocatedBy = "Capita", }
+                                                                                                               select new PropertyAddress { AddressLine = new[] { address.AddressLine }, PostalCode = address.PostCode, Reference = propertyReference }).ToList();
     }
 }

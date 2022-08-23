@@ -1,7 +1,7 @@
-using CsvHelper.Configuration.Attributes;
-
 namespace HousingRepairsOnline.AddressIngestion.Domain
 {
+    using CsvHelper.Configuration.Attributes;
+
     public class Address
     {
         [Index(0)]

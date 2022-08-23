@@ -1,48 +1,46 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Ardalis.GuardClauses;
-using Microsoft.Azure.WebJobs;
-using HACT.Dtos;
-
-namespace HousingRepairsOnline.AddressIngestion.Services;
-
-using System.Linq;
-using Microsoft.Azure.Documents.SystemFunctions;
-using Microsoft.Extensions.Logging;
-
-public class InsertAddressesToCosmosDb
+namespace HousingRepairsOnline.AddressIngestion.Services
 {
-    private readonly IAsyncCollector<PropertyAddress> propertyAddressesOut;
-    private readonly ILogger logger;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using HACT.Dtos;
+    using Microsoft.Azure.WebJobs;
+    using Microsoft.Extensions.Logging;
 
-    public InsertAddressesToCosmosDb(IAsyncCollector<PropertyAddress> propertyAddressesOut, ILogger logger)
+    public class InsertAddressesToCosmosDb
     {
-        this.propertyAddressesOut = propertyAddressesOut;
-        this.logger = logger;
-    }
+        private readonly IAsyncCollector<PropertyAddress> propertyAddressesOut;
+        private readonly ILogger logger;
 
-    public async Task Execute(IEnumerable<PropertyAddress> propertyAddresses )
-    {
-        foreach (var propertyAddress in propertyAddresses)
+        public InsertAddressesToCosmosDb(IAsyncCollector<PropertyAddress> propertyAddressesOut, ILogger logger)
         {
-            if (propertyAddress.AddressLine.FirstOrDefault() == "" || propertyAddress.AddressLine.FirstOrDefault() == null )
+            this.propertyAddressesOut = propertyAddressesOut;
+            this.logger = logger;
+        }
+
+        public async Task Execute(IEnumerable<PropertyAddress> propertyAddresses)
+        {
+            foreach (var propertyAddress in propertyAddresses)
             {
-                logger.LogInformation($"AddressLine for property {propertyAddress.Reference.ID} is null or empty");
-            }
-            else if (string.IsNullOrEmpty(propertyAddress.PostalCode) )
-            {
-                logger.LogInformation($"Postalcode for property {propertyAddress.PostalCode} is null or empty");
-            }
-            else if (string.IsNullOrEmpty(propertyAddress.Reference.ID) )
-            {
-                logger.LogInformation($"Property Id is null or empty");
-            }
-            else
-            {
-                await propertyAddressesOut.AddAsync(propertyAddress);
+                if (propertyAddress.AddressLine.FirstOrDefault() is "" or null)
+                {
+                    this.logger.LogInformation($"AddressLine for property {propertyAddress.Reference.ID} is null or empty");
+                }
+                else if (string.IsNullOrEmpty(propertyAddress.PostalCode))
+                {
+                    this.logger.LogInformation($"Postalcode for property {propertyAddress.PostalCode} is null or empty");
+                }
+                else if (string.IsNullOrEmpty(propertyAddress.Reference.ID))
+                {
+                    this.logger.LogInformation($"Property Id is null or empty");
+                }
+                else
+                {
+                    await this.propertyAddressesOut.AddAsync(propertyAddress);
+                }
             }
         }
+
+
     }
-
-
 }

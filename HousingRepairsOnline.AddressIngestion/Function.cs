@@ -1,15 +1,15 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using HousingRepairsOnline.AddressIngestion.Helpers;
-using HousingRepairsOnline.AddressIngestion.Services;
-using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Extensions.Logging;
-using HACT.Dtos;
-
 namespace HousingRepairsOnline.AddressIngestion
 {
+    using System;
+    using System.IO;
+    using System.Threading.Tasks;
+    using HACT.Dtos;
+    using HousingRepairsOnline.AddressIngestion.Helpers;
+    using HousingRepairsOnline.AddressIngestion.Services;
+    using Microsoft.Azure.Documents.Client;
+    using Microsoft.Azure.WebJobs;
+    using Microsoft.Extensions.Logging;
+
     public static class Function
     {
         [FunctionName("IngestAddresses")]
@@ -52,3 +52,4 @@ namespace HousingRepairsOnline.AddressIngestion
         }
     }
 }
+

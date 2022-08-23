@@ -1,34 +1,32 @@
-using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Ardalis.GuardClauses;
-using Microsoft.Azure.Documents;
-
-namespace HousingRepairsOnline.AddressIngestion.Services;
-
-public class RecreateDocumentCollection
+namespace HousingRepairsOnline.AddressIngestion.Services
 {
-    private readonly IDocumentClient documentClient;
+    using System;
+    using System.Collections.ObjectModel;
+    using System.Threading.Tasks;
+    using Ardalis.GuardClauses;
+    using Microsoft.Azure.Documents;
 
-    public RecreateDocumentCollection(IDocumentClient documentClient)
+    public class RecreateDocumentCollection
     {
-        this.documentClient = documentClient;
-    }
+        private readonly IDocumentClient documentClient;
 
-    public async Task Execute(Uri databaseUri, Uri collectionUri, string collectionName, string partitionKey)
-    {
-        Guard.Against.NullOrEmpty(collectionName, nameof(collectionName));
-        Guard.Against.NullOrEmpty(partitionKey, nameof(partitionKey));
+        public RecreateDocumentCollection(IDocumentClient documentClient) => this.documentClient = documentClient;
 
-
-        await documentClient.DeleteDocumentCollectionAsync(collectionUri);
-        await documentClient.CreateDocumentCollectionAsync(databaseUri, new DocumentCollection
+        public async Task Execute(Uri databaseUri, Uri collectionUri, string collectionName, string partitionKey)
         {
-            Id = collectionName,
-            PartitionKey = new PartitionKeyDefinition
+            Guard.Against.NullOrEmpty(collectionName, nameof(collectionName));
+            Guard.Against.NullOrEmpty(partitionKey, nameof(partitionKey));
+
+
+            await this.documentClient.DeleteDocumentCollectionAsync(collectionUri);
+            await this.documentClient.CreateDocumentCollectionAsync(databaseUri, new DocumentCollection
             {
-                Paths = new Collection<string> { partitionKey }
-            }
-        });
+                Id = collectionName,
+                PartitionKey = new PartitionKeyDefinition
+                {
+                    Paths = new Collection<string> { partitionKey }
+                }
+            });
+        }
     }
 }

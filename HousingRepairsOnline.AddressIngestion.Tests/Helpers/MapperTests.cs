@@ -1,14 +1,12 @@
-using System.IO;
-using System.Linq;
-using System.Text;
-using Xunit;
-using System.Collections.Generic;
-
-
 namespace HousingRepairsOnline.AddressIngestion.Helpers
 {
-    using Domain;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
     using FluentAssertions;
+    using HousingRepairsOnline.AddressIngestion.Domain;
+    using Xunit;
 
     public class MapperTests
     {
@@ -24,7 +22,7 @@ namespace HousingRepairsOnline.AddressIngestion.Helpers
             using (var test_Stream = new MemoryStream(Encoding.UTF8.GetBytes(csvTextFile)))
             {
                 var result = Mapper.CsvInputStreamToAddresses(test_Stream);
-                Assert.True(result.ToList().Count() == 3);
+                Assert.True(result.ToList().Count == 3);
             }
         }
 
@@ -47,7 +45,7 @@ namespace HousingRepairsOnline.AddressIngestion.Helpers
         [Fact]
         public void GiveAnAddressWhenToHactPropertyAddressesThenItIsMappedToAPropertyAddress()
         {
-            var mockAddress1 = new Address { AddressLine = "AddressLine" , PlaceReference =  1, PostCode = "AddressLine" };
+            var mockAddress1 = new Address { AddressLine = "AddressLine", PlaceReference = 1, PostCode = "AddressLine" };
             var mockAddress2 = new Address { AddressLine = "AddressLin2", PlaceReference = 2, PostCode = "AddressLine2" };
 
             var addresses = new List<Address> { mockAddress1, mockAddress2 };
