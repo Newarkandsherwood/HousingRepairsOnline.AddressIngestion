@@ -47,7 +47,7 @@ namespace HousingRepairsOnline.AddressIngestion
 
             var addresses = Mapper.CsvInputStreamToAddresses(inputStream);
             var propertyAddresses = Mapper.ToHactPropertyAddresses(addresses);
-            var insertAddressesToCosmosDB = new InsertAddressesToCosmosDb(propertyAddressesOut);
+            var insertAddressesToCosmosDB = new InsertAddressesToCosmosDb(propertyAddressesOut, log);
             await insertAddressesToCosmosDB.Execute(propertyAddresses);
         }
     }
