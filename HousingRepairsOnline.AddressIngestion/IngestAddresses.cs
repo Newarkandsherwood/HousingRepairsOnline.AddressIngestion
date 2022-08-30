@@ -10,7 +10,7 @@ namespace HousingRepairsOnline.AddressIngestion
     using Microsoft.Azure.WebJobs;
     using Microsoft.Extensions.Logging;
 
-    public static class Function
+    public static class IngestAddresses
     {
         [FunctionName("IngestAddresses")]
         public static async Task RunAsync(
@@ -38,7 +38,7 @@ namespace HousingRepairsOnline.AddressIngestion
             var collectionName = EnvironmentVariableHelper.GetEnvironmentVariable("CollectionName");
             var partitionKey = EnvironmentVariableHelper.GetEnvironmentVariable("PartitionKey");
 
-            var recreateDocumentCollection = new RecreateDocumentCollection(client);
+            var recreateDocumentCollection = new RecreateDocumentCollectionInCosmos(client);
             var collectionUri = UriFactory.CreateDocumentCollectionUri(databaseName, collectionName);
             var databaseUri = UriFactory.CreateDatabaseUri(databaseName);
             await recreateDocumentCollection.Execute(databaseUri, collectionUri, collectionName, partitionKey);

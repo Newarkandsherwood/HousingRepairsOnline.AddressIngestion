@@ -6,11 +6,11 @@ namespace HousingRepairsOnline.AddressIngestion.Services
     using Ardalis.GuardClauses;
     using Microsoft.Azure.Documents;
 
-    public class RecreateDocumentCollection
+    public class RecreateDocumentCollectionInCosmos
     {
         private readonly IDocumentClient documentClient;
 
-        public RecreateDocumentCollection(IDocumentClient documentClient) => this.documentClient = documentClient;
+        public RecreateDocumentCollectionInCosmos(IDocumentClient documentClient) => this.documentClient = documentClient;
 
         public async Task Execute(Uri databaseUri, Uri collectionUri, string collectionName, string partitionKey)
         {
