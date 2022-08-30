@@ -22,7 +22,7 @@ jobs:
       - name: Authenticate nuget
         run: dotnet nuget add source --username ${{ secrets.NUGET_AUTH_GITHUB_USERNAME }} --password ${{ secrets.NUGET_AUTH_GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/City-of-Lincoln-Council/index.json"
       - name: Run dotnet format
-        run: dotnet format --verify-no-changes HousingRepairsOnline.AddressIngestion.sln
+        run: dotnet format --verify-no-changes HousingRepairsOnline.AddressIngestion.sln --severity error
 
   test:
     name: Test
