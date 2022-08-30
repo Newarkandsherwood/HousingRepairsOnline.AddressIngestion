@@ -25,16 +25,18 @@ namespace HousingRepairsOnline.AddressIngestion.Services
                 if (propertyAddress.AddressLine.FirstOrDefault() is "" or null)
                 {
                     this.logger.LogInformation($"AddressLine for property {propertyAddress.Reference.ID} is null or empty");
+                    continue;
                 }
                 if (string.IsNullOrEmpty(propertyAddress.PostalCode))
                 {
                     this.logger.LogInformation($"Postalcode for property {propertyAddress.PostalCode} is null or empty");
+                    continue;
                 }
                 if (string.IsNullOrEmpty(propertyAddress.Reference.ID))
                 {
                     this.logger.LogInformation($"Property Id is null or empty");
+                    continue;
                 }
-
                 await this.propertyAddressesOut.AddAsync(propertyAddress);
             }
         }
