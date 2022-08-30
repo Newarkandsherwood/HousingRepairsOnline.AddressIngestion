@@ -14,8 +14,7 @@ namespace HousingRepairsOnline.AddressIngestion
     {
         [FunctionName("IngestAddresses")]
         public static async Task RunAsync(
-            [TimerTrigger("0 */1 * * * *")] TimerInfo myTimer,
-            [Blob("%BlobPath%", FileAccess.Read, Connection = "AzureWebJobsStorage")] Stream inputStream,
+            [BlobTrigger("%BlobPath%", Connection = "AzureWebJobsStorage")] Stream inputStream,
             [CosmosDB(
                 databaseName : "%DatabaseName%",
                 collectionName: "%CollectionName%",
