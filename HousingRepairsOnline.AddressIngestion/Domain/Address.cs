@@ -1,8 +1,8 @@
-using CsvHelper.Configuration.Attributes;
-
 namespace HousingRepairsOnline.AddressIngestion.Domain
 {
-    public class CommunalAddress
+    using CsvHelper.Configuration.Attributes;
+
+    public class Address
     {
         [Index(0)]
         public int PlaceReference { get; set; }

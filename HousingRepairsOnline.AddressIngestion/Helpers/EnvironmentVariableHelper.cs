@@ -1,12 +1,10 @@
-using System;
-
-namespace HousingRepairsOnline.AddressIngestion.Helpers;
-
-public class EnvironmentVariableHelper
+namespace HousingRepairsOnline.AddressIngestion.Helpers
 {
-    public static string GetEnvironmentVariable(string name)
+    using System;
+
+    public static class EnvironmentVariableHelper
     {
-        return Environment.GetEnvironmentVariable(name) ??
-               throw new InvalidOperationException($"Incorrect configuration: '{name}' environment variable must be set");
+        public static string GetEnvironmentVariable(string name) => Environment.GetEnvironmentVariable(name) ??
+                   throw new InvalidOperationException($"Incorrect configuration: '{name}' environment variable must be set");
     }
 }

@@ -19,8 +19,8 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-      - name: Install dotnet format
-        run: dotnet tool update --global dotnet-format
+      - name: Authenticate nuget
+        run: dotnet nuget add source --username ${{ secrets.NUGET_AUTH_GITHUB_USERNAME }} --password ${{ secrets.NUGET_AUTH_GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/City-of-Lincoln-Council/index.json"
       - name: Run dotnet format
         run: dotnet format --verify-no-changes HousingRepairsOnline.AddressIngestion.sln
 
@@ -30,9 +30,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 6.0.x
+      - name: Authenticate nuget
+        run: dotnet nuget add source --username ${{ secrets.NUGET_AUTH_GITHUB_USERNAME }} --password ${{ secrets.NUGET_AUTH_GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/City-of-Lincoln-Council/index.json"
       - name: Test
         run: dotnet test
   build:
@@ -42,8 +44,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 6.0.x
+      - name: Authenticate nuget
+        run: dotnet nuget add source --username ${{ secrets.NUGET_AUTH_GITHUB_USERNAME }} --password ${{ secrets.NUGET_AUTH_GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/City-of-Lincoln-Council/index.json"
       - name: Build with dotnet
         run: dotnet build --configuration Release
