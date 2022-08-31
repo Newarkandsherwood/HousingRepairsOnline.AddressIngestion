@@ -36,6 +36,7 @@ namespace HousingRepairsOnline.AddressIngestion
             var databaseName = EnvironmentVariableHelper.GetEnvironmentVariable("DatabaseName");
             var collectionName = EnvironmentVariableHelper.GetEnvironmentVariable("CollectionName");
             var partitionKey = EnvironmentVariableHelper.GetEnvironmentVariable("PartitionKey");
+            var housingProvider = EnvironmentVariableHelper.GetEnvironmentVariable("HousingProvider");
 
             var recreateDocumentCollection = new RecreateDocumentCollectionInCosmos(client);
             var collectionUri = UriFactory.CreateDocumentCollectionUri(databaseName, collectionName);
@@ -45,7 +46,7 @@ namespace HousingRepairsOnline.AddressIngestion
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.UtcNow}");
 
             var addresses = Mapper.CsvInputStreamToAddresses(inputStream);
-            var propertyAddresses = Mapper.ToHactPropertyAddresses(addresses);
+            var propertyAddresses = Mapper.ToHactPropertyAddresses(addresses, housingProvider);
             var insertAddressesToCosmosDB = new InsertAddressesToCosmosDb(propertyAddressesOut, log);
             await insertAddressesToCosmosDB.Execute(propertyAddresses);
         }

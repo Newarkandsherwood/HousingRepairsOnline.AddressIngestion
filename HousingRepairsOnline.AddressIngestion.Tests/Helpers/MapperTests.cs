@@ -49,7 +49,7 @@ namespace HousingRepairsOnline.AddressIngestion.Helpers
             var mockAddress2 = new Address { AddressLine = "AddressLin2", PlaceReference = 2, PostCode = "AddressLine2" };
 
             var addresses = new List<Address> { mockAddress1, mockAddress2 };
-            var propertyAddresses = Mapper.ToHactPropertyAddresses(addresses);
+            var propertyAddresses = Mapper.ToHactPropertyAddresses(addresses, "capita");
             propertyAddresses.FirstOrDefault().AddressLine.Should().Equal(mockAddress1.AddressLine);
             propertyAddresses.FirstOrDefault().Reference.ID.Should().BeEquivalentTo(mockAddress1.PlaceReference.ToString());
             propertyAddresses.FirstOrDefault().PostalCode.Should().BeEquivalentTo(mockAddress1.PostCode);

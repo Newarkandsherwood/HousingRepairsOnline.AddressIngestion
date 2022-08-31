@@ -18,10 +18,10 @@ namespace HousingRepairsOnline.AddressIngestion.Helpers
             return csv.GetRecords<Address>().ToList();
         }
 
-        public static IEnumerable<PropertyAddress> ToHactPropertyAddresses(IEnumerable<Address> addresses) => (from address in addresses
+        public static IEnumerable<PropertyAddress> ToHactPropertyAddresses(IEnumerable<Address> addresses, string housingProvider) => (from address in addresses
                                                                                                                let propertyReference = address.PlaceReference == null
                                                                                                                    ? null
-                                                                                                                   : new Reference { ID = address.PlaceReference.ToString(), AllocatedBy = Constants.HousingProvider, }
+                                                                                                                   : new Reference { ID = address.PlaceReference.ToString(), AllocatedBy = housingProvider, }
                                                                                                                select new PropertyAddress { AddressLine = new[] { address.AddressLine }, PostalCode = address.PostCode, Reference = propertyReference }).ToList();
     }
 }
