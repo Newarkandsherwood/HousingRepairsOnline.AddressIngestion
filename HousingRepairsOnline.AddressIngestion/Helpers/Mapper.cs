@@ -19,9 +19,9 @@ namespace HousingRepairsOnline.AddressIngestion.Helpers
         }
 
         public static IEnumerable<PropertyAddress> ToHactPropertyAddresses(IEnumerable<Address> addresses, string housingProvider) => (from address in addresses
-                                                                                                               let propertyReference = address.PlaceReference == null
-                                                                                                                   ? null
-                                                                                                                   : new Reference { ID = address.PlaceReference.ToString(), AllocatedBy = housingProvider, }
-                                                                                                               select new PropertyAddress { AddressLine = new[] { address.AddressLine }, PostalCode = address.PostCode, Reference = propertyReference }).ToList();
+                                                                                                                                       let propertyReference = address.PlaceReference == null
+                                                                                                                                           ? null
+                                                                                                                                           : new Reference { ID = address.PlaceReference.ToString(CultureInfo.InvariantCulture), AllocatedBy = housingProvider, }
+                                                                                                                                       select new PropertyAddress { AddressLine = new[] { address.AddressLine }, PostalCode = address.PostCode, Reference = propertyReference }).ToList();
     }
 }

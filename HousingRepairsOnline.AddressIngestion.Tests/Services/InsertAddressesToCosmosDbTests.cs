@@ -73,17 +73,6 @@ namespace HousingRepairsOnline.AddressIngestion.Tests.Services
             this.collectorMock.Verify(x => x.AddAsync(It.IsAny<PropertyAddress>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
         }
         [Fact]
-        public async Task GivenThreeAddressesWheAddressLineIsNullThenItIsLogged()
-        {
-            var mockAddress1 = new PropertyAddress { AddressLine = new[] { "AddressLine" }, Reference = new Reference { ID = "1", Description = "Housing repairs" }, PostalCode = "AddressLine" };
-            var mockAddress2 = new PropertyAddress { AddressLine = new List<string> { null }, Reference = new Reference { ID = "2", Description = "Housing repairs" }, PostalCode = "AddressLine2" };
-            var mockAddress3 = new PropertyAddress { AddressLine = new[] { "AddressLine3" }, Reference = new Reference { ID = "3", Description = "Housing repairs" }, PostalCode = "AddressLine3" };
-
-            var addresses = new List<PropertyAddress> { mockAddress1, mockAddress2, mockAddress3 };
-            await this.insertAddessesToCosmosDB.Execute(addresses);
-            this.collectorMock.Verify(x => x.AddAsync(It.IsAny<PropertyAddress>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
-        }
-        [Fact]
         public async Task GivenThreeAddressesWheNoPostcodeThenItIsLogged()
         {
             var mockAddress1 = new PropertyAddress { AddressLine = new[] { "AddressLine" }, Reference = new Reference { ID = "1", Description = "Housing repairs" }, PostalCode = "AddressLine" };

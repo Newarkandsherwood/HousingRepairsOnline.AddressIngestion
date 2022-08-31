@@ -1,6 +1,7 @@
 namespace HousingRepairsOnline.AddressIngestion.Helpers
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -50,10 +51,10 @@ namespace HousingRepairsOnline.AddressIngestion.Helpers
 
             var addresses = new List<Address> { mockAddress1, mockAddress2 };
             var propertyAddresses = Mapper.ToHactPropertyAddresses(addresses, "capita");
-            propertyAddresses.FirstOrDefault().AddressLine.Should().Equal(mockAddress1.AddressLine);
-            propertyAddresses.FirstOrDefault().Reference.ID.Should().BeEquivalentTo(mockAddress1.PlaceReference.ToString());
-            propertyAddresses.FirstOrDefault().PostalCode.Should().BeEquivalentTo(mockAddress1.PostCode);
-            propertyAddresses.FirstOrDefault().Reference.AllocatedBy.Should().BeEquivalentTo("Capita");
+            propertyAddresses.FirstOrDefault()!.AddressLine.Should().Equal(mockAddress1.AddressLine);
+            propertyAddresses.FirstOrDefault()!.Reference.ID.Should().BeEquivalentTo(mockAddress1.PlaceReference.ToString(CultureInfo.InvariantCulture));
+            propertyAddresses.FirstOrDefault()!.PostalCode.Should().BeEquivalentTo(mockAddress1.PostCode);
+            propertyAddresses.FirstOrDefault()!.Reference!.AllocatedBy.Should().BeEquivalentTo("Capita");
 
         }
     }
