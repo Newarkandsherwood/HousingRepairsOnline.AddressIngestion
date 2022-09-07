@@ -33,6 +33,14 @@ resource "azurerm_windows_function_app" "example" {
 
   site_config {
   }
+  app_settings = {
+    "CosmosDBConnection" = var.cosmos-connection-string,
+    "DatabaseName"       = var.database-name,
+    "CollectionName"     = "Communal",
+    "BlobPath"           = "insight-report-addresses/test.csv",
+    "PartitionKey"       = "/PlaceReference",
+    "HousingProvider"    = "Capita"
+  }
 }
 
 data "azurerm_subscription" "primary" {

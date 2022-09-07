@@ -65,6 +65,8 @@ jobs:
       - name: Setup tfvars
         run: |
           touch env.tfvars
+          echo "cosmos-connection-string    = \"${{ secrets.COSMOS_CONNECTION_STRING }}\"" >> env.tfvars
+          echo "database-name    = \"${{ secrets.DATABASE_NAME }}\"" >> env.tfvars
           echo "project    = \"${{ secrets.PROJECT_NAME }}\"" >> env.tfvars
           echo "location    = \"${{ secrets.LOCATION }}\"" >> env.tfvars
           echo "resource-group    = \"${{ secrets.RESOURCE_GROUP_NAME }}\"" >> env.tfvars
