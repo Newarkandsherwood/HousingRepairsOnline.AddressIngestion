@@ -37,20 +37,7 @@ jobs:
         run: dotnet nuget add source --username ${{ secrets.NUGET_AUTH_GITHUB_USERNAME }} --password ${{ secrets.NUGET_AUTH_GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/City-of-Lincoln-Council/index.json"
       - name: Test
         run: dotnet test
-  build:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    name: Build Release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: 6.0.x
-      - name: Authenticate nuget
-        run: dotnet nuget add source --username ${{ secrets.NUGET_AUTH_GITHUB_USERNAME }} --password ${{ secrets.NUGET_AUTH_GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/City-of-Lincoln-Council/index.json"
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+
   infrastructure:
 #    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: "Provision Infrastructure"
@@ -97,3 +84,32 @@ jobs:
       - name: Terraform Apply
         id: terraform_apply
         run: terraform apply -auto-approve -var-file="env.tfvars"
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    needs: [infrastructure]
+    steps:
+      - name: 'Checkout GitHub action'
+        uses: actions/checkout@v2
+
+      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Authenticate nuget
+        run: dotnet nuget add source --username ${{ secrets.NUGET_AUTH_GITHUB_USERNAME }} --password ${{ secrets.NUGET_AUTH_GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/City-of-Lincoln-Council/index.json"
+
+      - name: 'Resolve Project Dependencies Using Dotnet'
+        shell: bash
+        run: |
+          pushd './HousingRepairsOnline.AddressIngestion'
+          dotnet build --configuration Release --output ./output
+          popd
+
+      - name: 'Run Azure Functions action'
+        uses: Azure/functions-action@v1
+        with:
+          app-name: 'test-function-hro-maysa'
+          package: 'HousingRepairsOnline.AddressIngestion/output'
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
