@@ -20,10 +20,10 @@ namespace HousingRepairsOnline.AddressIngestion
                 collectionName: "%CollectionName%",
                 ConnectionStringSetting = "CosmosDBConnection")]
             IAsyncCollector<PropertyAddress> propertyAddressesOut,
-            // [CosmosDB(
-            //     databaseName : "%DatabaseName%",
-            //     collectionName: "%CollectionName%",
-            //     ConnectionStringSetting = "CosmosDBConnection")] DocumentClient client,
+            [CosmosDB(
+                databaseName : "%DatabaseName%",
+                collectionName: "%CollectionName%",
+                ConnectionStringSetting = "CosmosDBConnection")] DocumentClient client,
             ILogger log)
         {
             var blobPath = EnvironmentVariableHelper.GetEnvironmentVariable("BlobPath");
@@ -38,10 +38,10 @@ namespace HousingRepairsOnline.AddressIngestion
             var partitionKey = EnvironmentVariableHelper.GetEnvironmentVariable("PartitionKey");
             var housingProvider = EnvironmentVariableHelper.GetEnvironmentVariable("HousingProvider");
 
-            // var recreateDocumentCollection = new RecreateDocumentCollectionInCosmos(client);
-            // var collectionUri = UriFactory.CreateDocumentCollectionUri(databaseName, collectionName);
-            // var databaseUri = UriFactory.CreateDatabaseUri(databaseName);
-            // await recreateDocumentCollection.Execute(databaseUri, collectionUri, collectionName, partitionKey);
+            var recreateDocumentCollection = new RecreateDocumentCollectionInCosmos(client);
+            var collectionUri = UriFactory.CreateDocumentCollectionUri(databaseName, collectionName);
+            var databaseUri = UriFactory.CreateDatabaseUri(databaseName);
+            await recreateDocumentCollection.Execute(databaseUri, collectionUri, collectionName, partitionKey);
 
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.UtcNow}");
 
