@@ -6,6 +6,7 @@ namespace HousingRepairsOnline.AddressIngestion
     using HACT.Dtos;
     using HousingRepairsOnline.AddressIngestion.Helpers;
     using HousingRepairsOnline.AddressIngestion.Services;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Documents.Client;
     using Microsoft.Azure.WebJobs;
     using Microsoft.Extensions.Logging;
@@ -13,7 +14,7 @@ namespace HousingRepairsOnline.AddressIngestion
     public static class IngestAddresses
     {
         [FunctionName("IngestAddresses")]
-        public static async Task RunAsync(
+        public static async Task<IActionResult> RunAsync(
             [BlobTrigger("%BlobPath%", Connection = "AzureWebJobsStorage")] Stream inputStream,
             [CosmosDB(
                 databaseName : "%DatabaseName%",
@@ -49,6 +50,10 @@ namespace HousingRepairsOnline.AddressIngestion
             var propertyAddresses = Mapper.ToHactPropertyAddresses(addresses, housingProvider);
             var insertAddressesToCosmosDB = new InsertAddressesToCosmosDb(propertyAddressesOut, log);
             await insertAddressesToCosmosDB.Execute(propertyAddresses);
+
+            const string responseMessage = "This function was triggered and executed successfully.";
+
+            return new OkObjectResult(responseMessage);
         }
     }
 }
