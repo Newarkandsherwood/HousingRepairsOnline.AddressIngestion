@@ -38,8 +38,10 @@ resource "azurerm_windows_function_app" "ingest-tenant-addresses" {
   site_config {
   }
 
+
+
   app_settings = {
-    "CosmosDBConnection" = data.azurerm_cosmosdb_account.hro.write_endpoints
+    "CosmosDBConnection" = "${data.azurerm_cosmosdb_account.hro.endpoint};AccountKey=${data.azurerm_cosmosdb_account.hro.primary_key};"
     "DatabaseName"       = azurerm_cosmosdb_sql_database.hro-addresses.name
     "CollectionName"     = azurerm_cosmosdb_sql_container.hro-tenant-addresses.name
     "BlobPath"           = var.tenant-csv-blob-path
