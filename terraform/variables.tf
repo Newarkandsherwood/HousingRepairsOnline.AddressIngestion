@@ -23,9 +23,14 @@ variable "storage-container-name" {
   description = "storage container name"
 }
 
-variable "tenant-csv-blob-path" {
+variable "tenant-csv-blob-path-production" {
   type        = string
-  description = "Path to tenant address data CSV"
+  description = "Path to production tenant address data CSV"
+}
+
+variable "tenant-csv-blob-path-staging" {
+  type        = string
+  description = "Path to staging tenant address data CSV"
 }
 
 variable "partition-key" {

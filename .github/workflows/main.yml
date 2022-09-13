@@ -70,7 +70,8 @@ jobs:
           echo "storage-account                       = \"${{ secrets.STORAGE_ACCOUNT_NAME }}\"" >> env.tfvars
           echo "storage-account-primary-access-key    = \"${{ secrets.STORAGE_ACCOUNT_PRIMARY_ACCESS_KEY }}\"" >> env.tfvars
           echo "storage-container-name                = \"${{ secrets.STATE_CONTAINER_NAME }}\"" >> env.tfvars
-          echo "tenant-csv-blob-path                  = \"${{ secrets.TENANT_CSV_BLOB_PATH }}\"" >> env.tfvars
+          echo "tenant-csv-blob-path-production       = \"${{ secrets.TENANT_CSV_BLOB_PATH_PRODUCTION }}\"" >> env.tfvars
+          echo "tenant-csv-blob-path-staging          = \"${{ secrets.TENANT_CSV_BLOB_PATH_STAGING }}\"" >> env.tfvars
           echo "partition-key                         = \"${{ secrets.PARTITION_KEY }}\"" >> env.tfvars
           echo "housing-provider                      = \"${{ secrets.HOUSING_PROVIDER }}\"" >> env.tfvars
           echo "cosmos-account-name                   = \"${{ secrets.COSMOS_ACCOUNT_NAME }}\"" >> env.tfvars
@@ -110,9 +111,17 @@ jobs:
           dotnet build --configuration Release --output ./output
           popd
 
-      - name: 'Run Azure Functions action'
+      - name: 'Run Azure Staging Functions action'
         uses: Azure/functions-action@v1
         with:
-          app-name: 'hro-tenant-address-ingestion'
+          app-name: 'hro-tenant-address-ingestion-staging'
           package: 'HousingRepairsOnline.AddressIngestion/output'
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_STAGING}}
+
+      - name: 'Run Azure Production Functions action'
+        uses: Azure/functions-action@v1
+        with:
+          app-name: 'hro-tenant-address-ingestion-production'
+          package: 'HousingRepairsOnline.AddressIngestion/output'
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_PRODUCTION }}
+
