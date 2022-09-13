@@ -26,8 +26,8 @@ resource "azurerm_service_plan" "ingest-addresses" {
   sku_name            = "Y1"
 }
 
-resource "azurerm_windows_function_app" "ingest-tenant-addresses" {
-  name                = "hro-tenant-address-ingestion"
+resource "azurerm_windows_function_app" "ingest-tenant-addresses-production" {
+  name                = "hro-tenant-address-ingestion-production"
   resource_group_name = var.resource-group
   location            = var.location
 
@@ -43,32 +43,35 @@ resource "azurerm_windows_function_app" "ingest-tenant-addresses" {
   app_settings = {
     "CosmosDBConnection" = "${data.azurerm_cosmosdb_account.hro.endpoint};AccountKey=${data.azurerm_cosmosdb_account.hro.primary_key};"
     "DatabaseName"       = azurerm_cosmosdb_sql_database.hro-addresses.name
-    "CollectionName"     = azurerm_cosmosdb_sql_container.hro-tenant-addresses.name
-    "BlobPath"           = var.tenant-csv-blob-path
+    "CollectionName"     = azurerm_cosmosdb_sql_container.hro-tenant-addresses-production.name
+    "BlobPath"           = var.tenant-csv-blob-path-production
     "PartitionKey"       = var.partition-key
     "HousingProvider"    = var.housing-provider
   }
 }
 
-data "azurerm_subscription" "primary" {
-}
-
-data "azurerm_storage_account" "example" {
-  name                = var.storage-account
+resource "azurerm_windows_function_app" "ingest-tenant-addresses-staging" {
+  name                = "hro-tenant-address-ingestion-staging"
   resource_group_name = var.resource-group
-}
+  location            = var.location
 
-resource "azurerm_role_assignment" "ingest_addresses_contributor" {
-  scope                = data.azurerm_subscription.primary.id
-  role_definition_name = "Contributor"
-  principal_id         = azurerm_windows_function_app.example.identity[0].principal_id
-}
+  storage_account_name       = var.storage-account
+  storage_account_access_key = var.storage-account-primary-access-key
+  service_plan_id            = azurerm_service_plan.ingest-addresses.id
 
-# Allow our function's managed identity to have r/w access to the storage account
-resource "azurerm_role_assignment" "ingest_addresses" {
-  principal_id         = azurerm_windows_function_app.example.identity[0].principal_id
-  scope                = data.azurerm_storage_account.example.id
-  role_definition_name = "Storage Blob Data Reader"
+  site_config {
+  }
+
+
+
+  app_settings = {
+    "CosmosDBConnection" = "${data.azurerm_cosmosdb_account.hro.endpoint};AccountKey=${data.azurerm_cosmosdb_account.hro.primary_key};"
+    "DatabaseName"       = azurerm_cosmosdb_sql_database.hro-addresses.name
+    "CollectionName"     = azurerm_cosmosdb_sql_container.hro-tenant-addresses-staging.name
+    "BlobPath"           = var.tenant-csv-blob-path-staging
+    "PartitionKey"       = var.partition-key
+    "HousingProvider"    = var.housing-provider
+  }
 }
 
 resource "azurerm_cosmosdb_sql_database" "hro-addresses" {
@@ -77,8 +80,18 @@ resource "azurerm_cosmosdb_sql_database" "hro-addresses" {
   account_name        = var.cosmos-account-name
 }
 
-resource "azurerm_cosmosdb_sql_container" "hro-tenant-addresses" {
-  name                  = "Tenant"
+resource "azurerm_cosmosdb_sql_container" "hro-tenant-addresses-production" {
+  name                  = "tenant-production"
+  account_name          = var.cosmos-account-name
+  resource_group_name   = var.resource-group
+  database_name         = azurerm_cosmosdb_sql_database.hro-addresses.name
+  partition_key_path    = var.partition-key
+  partition_key_version = 1
+  throughput            = 400
+}
+
+resource "azurerm_cosmosdb_sql_container" "hro-tenant-addresses-staging" {
+  name                  = "tenant-staging"
   account_name          = var.cosmos-account-name
   resource_group_name   = var.resource-group
   database_name         = azurerm_cosmosdb_sql_database.hro-addresses.name
