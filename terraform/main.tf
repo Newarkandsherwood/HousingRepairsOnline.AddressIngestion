@@ -41,7 +41,7 @@ resource "azurerm_windows_function_app" "ingest-tenant-addresses-production" {
 
 
   app_settings = {
-    "CosmosDBConnection" = "${data.azurerm_cosmosdb_account.hro.endpoint};AccountKey=${data.azurerm_cosmosdb_account.hro.primary_key};"
+    "CosmosDBConnection" = "AccountEndpoint=${data.azurerm_cosmosdb_account.hro.endpoint};AccountKey=${data.azurerm_cosmosdb_account.hro.primary_key};"
     "DatabaseName"       = azurerm_cosmosdb_sql_database.hro-addresses.name
     "CollectionName"     = azurerm_cosmosdb_sql_container.hro-tenant-addresses-production.name
     "BlobPath"           = var.tenant-csv-blob-path-production
@@ -65,7 +65,7 @@ resource "azurerm_windows_function_app" "ingest-tenant-addresses-staging" {
 
 
   app_settings = {
-    "CosmosDBConnection" = "${data.azurerm_cosmosdb_account.hro.endpoint};AccountKey=${data.azurerm_cosmosdb_account.hro.primary_key};"
+    "CosmosDBConnection" = "AccountEndpoint=${data.azurerm_cosmosdb_account.hro.endpoint};AccountKey=${data.azurerm_cosmosdb_account.hro.primary_key};"
     "DatabaseName"       = azurerm_cosmosdb_sql_database.hro-addresses.name
     "CollectionName"     = azurerm_cosmosdb_sql_container.hro-tenant-addresses-staging.name
     "BlobPath"           = var.tenant-csv-blob-path-staging
