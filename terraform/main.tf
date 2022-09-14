@@ -35,10 +35,7 @@ resource "azurerm_windows_function_app" "ingest-tenant-addresses-production" {
   storage_account_access_key = var.storage-account-primary-access-key
   service_plan_id            = azurerm_service_plan.ingest-addresses.id
 
-  site_config {
-  }
-
-
+  site_config {}
 
   app_settings = {
     "CosmosDBConnection" = "AccountEndpoint=${data.azurerm_cosmosdb_account.hro.endpoint};AccountKey=${data.azurerm_cosmosdb_account.hro.primary_key};"
@@ -59,10 +56,7 @@ resource "azurerm_windows_function_app" "ingest-tenant-addresses-staging" {
   storage_account_access_key = var.storage-account-primary-access-key
   service_plan_id            = azurerm_service_plan.ingest-addresses.id
 
-  site_config {
-  }
-
-
+  site_config {}
 
   app_settings = {
     "CosmosDBConnection" = "AccountEndpoint=${data.azurerm_cosmosdb_account.hro.endpoint};AccountKey=${data.azurerm_cosmosdb_account.hro.primary_key};"
