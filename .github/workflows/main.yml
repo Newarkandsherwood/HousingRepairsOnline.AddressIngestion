@@ -39,7 +39,7 @@ jobs:
         run: dotnet test
 
   infrastructure:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: "Provision Infrastructure"
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
@@ -84,44 +84,44 @@ jobs:
         id: plan
         run: terraform plan -no-color -var-file="env.tfvars"
 
-      - name: Terraform Apply
-        id: terraform_apply
-        run: terraform apply -auto-approve -var-file="env.tfvars"
+      # - name: Terraform Apply
+      #   id: terraform_apply
+      #   run: terraform apply -auto-approve -var-file="env.tfvars"
 
-  build-and-deploy:
-    name: "Build and Deploy Azure function code"
-    runs-on: ubuntu-latest
-    needs: [infrastructure]
-    steps:
-      - name: 'Checkout GitHub action'
-        uses: actions/checkout@v2
+  # build-and-deploy:
+  #   name: "Build and Deploy Azure function code"
+  #   runs-on: ubuntu-latest
+  #   needs: [infrastructure]
+  #   steps:
+  #     - name: 'Checkout GitHub action'
+  #       uses: actions/checkout@v2
 
-      - name: Setup DotNet Environment
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6.0.x'
+  #     - name: Setup DotNet Environment
+  #       uses: actions/setup-dotnet@v1
+  #       with:
+  #         dotnet-version: '6.0.x'
 
-      - name: Authenticate nuget
-        run: dotnet nuget add source --username ${{ secrets.NUGET_AUTH_GITHUB_USERNAME }} --password ${{ secrets.NUGET_AUTH_GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/City-of-Lincoln-Council/index.json"
+  #     - name: Authenticate nuget
+  #       run: dotnet nuget add source --username ${{ secrets.NUGET_AUTH_GITHUB_USERNAME }} --password ${{ secrets.NUGET_AUTH_GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/City-of-Lincoln-Council/index.json"
 
-      - name: 'Resolve Project Dependencies Using Dotnet'
-        shell: bash
-        run: |
-          pushd './HousingRepairsOnline.AddressIngestion'
-          dotnet build --configuration Release --output ./output
-          popd
+  #     - name: 'Resolve Project Dependencies Using Dotnet'
+  #       shell: bash
+  #       run: |
+  #         pushd './HousingRepairsOnline.AddressIngestion'
+  #         dotnet build --configuration Release --output ./output
+  #         popd
 
-      - name: 'Run Azure Staging Functions action'
-        uses: Azure/functions-action@v1
-        with:
-          app-name: 'hro-tenant-address-ingestion-staging'
-          package: 'HousingRepairsOnline.AddressIngestion/output'
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_STAGING}}
+  #     - name: 'Run Azure Staging Functions action'
+  #       uses: Azure/functions-action@v1
+  #       with:
+  #         app-name: 'hro-tenant-address-ingestion-staging'
+  #         package: 'HousingRepairsOnline.AddressIngestion/output'
+  #         publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_STAGING}}
 
-      - name: 'Run Azure Production Functions action'
-        uses: Azure/functions-action@v1
-        with:
-          app-name: 'hro-tenant-address-ingestion-production'
-          package: 'HousingRepairsOnline.AddressIngestion/output'
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_PRODUCTION }}
+  #     - name: 'Run Azure Production Functions action'
+  #       uses: Azure/functions-action@v1
+  #       with:
+  #         app-name: 'hro-tenant-address-ingestion-production'
+  #         package: 'HousingRepairsOnline.AddressIngestion/output'
+  #         publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_PRODUCTION }}
 
