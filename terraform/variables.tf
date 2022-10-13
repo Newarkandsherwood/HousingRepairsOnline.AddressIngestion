@@ -18,9 +18,14 @@ variable "storage-account-primary-access-key" {
   description = "Storage account primary access key"
 }
 
-variable "storage-container-name" {
+variable "communal-csv-blob-path-production" {
   type        = string
-  description = "storage container name"
+  description = "Path to production communal address data CSV"
+}
+
+variable "communal-csv-blob-path-staging" {
+  type        = string
+  description = "Path to staging communal address data CSV"
 }
 
 variable "tenant-csv-blob-path-production" {
