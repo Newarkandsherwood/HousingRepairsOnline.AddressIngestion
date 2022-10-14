@@ -13,6 +13,16 @@ variable "storage-account" {
   description = "Storage account name"
 }
 
+variable "service-plan-id" {
+  type        = string
+  description = "ID of Azure Service Plan"
+}
+
+variable "database-name" {
+  type        = string
+  description = "Name of database to store containers"
+}
+
 variable "storage-account-primary-access-key" {
   type        = string
   description = "Storage account primary access key"
