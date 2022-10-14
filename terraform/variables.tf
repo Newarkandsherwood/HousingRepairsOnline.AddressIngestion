@@ -28,6 +28,16 @@ variable "communal-csv-blob-path-staging" {
   description = "Path to staging communal address data CSV"
 }
 
+variable "tenant-csv-blob-path-production" {
+  type        = string
+  description = "Path to production tenant address data CSV"
+}
+
+variable "tenant-csv-blob-path-staging" {
+  type        = string
+  description = "Path to staging tenant address data CSV"
+}
+
 variable "partition-key" {
   type        = string
   description = "Partition key"
@@ -41,9 +51,4 @@ variable "housing-provider" {
 variable "cosmos-account-name" {
   type        = string
   description = "Name of CosmosDB account"
-}
-
-variable "address-type" {
-  type        = string
-  description = "Type of address data"
 }
