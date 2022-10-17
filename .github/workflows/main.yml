@@ -39,7 +39,7 @@ jobs:
         run: dotnet test
 
   infrastructure:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: "Provision Infrastructure"
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
@@ -71,6 +71,8 @@ jobs:
           echo "storage-account-primary-access-key    = \"${{ secrets.STORAGE_ACCOUNT_PRIMARY_ACCESS_KEY }}\"" >> env.tfvars
           echo "tenant-csv-blob-path-production       = \"${{ secrets.TENANT_CSV_BLOB_PATH_PRODUCTION }}\"" >> env.tfvars
           echo "tenant-csv-blob-path-staging          = \"${{ secrets.TENANT_CSV_BLOB_PATH_STAGING }}\"" >> env.tfvars
+          echo "communal-csv-blob-path-production     = \"${{ secrets.COMMUNAL_CSV_BLOB_PATH_STAGING }}\"" >> env.tfvars
+          echo "communal-csv-blob-path-staging        = \"${{ secrets.COMMUNAL_CSV_BLOB_PATH_STAGING }}\"" >> env.tfvars
           echo "partition-key                         = \"${{ secrets.PARTITION_KEY }}\"" >> env.tfvars
           echo "housing-provider                      = \"${{ secrets.HOUSING_PROVIDER }}\"" >> env.tfvars
           echo "cosmos-account-name                   = \"${{ secrets.COSMOS_ACCOUNT_NAME }}\"" >> env.tfvars
@@ -113,14 +115,15 @@ jobs:
       - name: 'Run Azure Staging Functions action'
         uses: Azure/functions-action@v1
         with:
-          app-name: 'hro-tenant-address-ingestion-staging'
+          app-name: 'hro-tenant-address-ingestion'
+          slot-name: 'tenant-staging'
           package: 'HousingRepairsOnline.AddressIngestion/output'
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_STAGING}}
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_TENANT_STAGING}}
 
       - name: 'Run Azure Production Functions action'
         uses: Azure/functions-action@v1
         with:
-          app-name: 'hro-tenant-address-ingestion-production'
+          app-name: 'hro-tenant-address-ingestion'
           package: 'HousingRepairsOnline.AddressIngestion/output'
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_PRODUCTION }}
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_TENANT_PRODUCTION }}
 
