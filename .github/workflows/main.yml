@@ -89,8 +89,8 @@ jobs:
         id: terraform_apply
         run: terraform apply -auto-approve -var-file="env.tfvars"
 
-  build-and-deploy:
-    name: "Build and Deploy Azure function code"
+  build-and-deploy-staging:
+    name: "Build and Deploy Azure function code for Staging"
     runs-on: ubuntu-latest
     needs: [infrastructure]
     steps:
@@ -112,20 +112,13 @@ jobs:
           dotnet build --configuration Release --output ./output
           popd
 
-      - name: 'Run Azure Staging Functions action'
+      - name: 'Run Azure Tenant Staging Function action'
         uses: Azure/functions-action@v1
         with:
           app-name: 'hro-tenant-address-ingestion'
           slot-name: 'tenant-staging'
           package: 'HousingRepairsOnline.AddressIngestion/output'
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_TENANT_STAGING}}
-
-      - name: 'Run Azure Production Functions action'
-        uses: Azure/functions-action@v1
-        with:
-          app-name: 'hro-tenant-address-ingestion'
-          package: 'HousingRepairsOnline.AddressIngestion/output'
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_TENANT_PRODUCTION }}
 
       - name: 'Run Azure Communal Staging Function action'
         uses: Azure/functions-action@v1
@@ -135,10 +128,39 @@ jobs:
           package: 'HousingRepairsOnline.AddressIngestion/output'
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_COMMUNAL_STAGING}}
 
+  build-and-deploy-production:
+    name: "Build and Deploy Azure function code for Production"
+    runs-on: ubuntu-latest
+    needs: build-and-deploy-staging
+    steps:
+      - name: 'Checkout GitHub action'
+        uses: actions/checkout@v2
+
+      - name: Setup DotNet Environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Authenticate nuget
+        run: dotnet nuget add source --username ${{ secrets.NUGET_AUTH_GITHUB_USERNAME }} --password ${{ secrets.NUGET_AUTH_GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/City-of-Lincoln-Council/index.json"
+
+      - name: 'Resolve Project Dependencies Using Dotnet'
+        shell: bash
+        run: |
+          pushd './HousingRepairsOnline.AddressIngestion'
+          dotnet build --configuration Release --output ./output
+          popd
+
+      - name: 'Run Azure Tenant Production Function action'
+        uses: Azure/functions-action@v1
+        with:
+          app-name: 'hro-tenant-address-ingestion'
+          package: 'HousingRepairsOnline.AddressIngestion/output'
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_TENANT_PRODUCTION }}
+
       - name: 'Run Azure Communal Production Function action'
         uses: Azure/functions-action@v1
         with:
           app-name: 'hro-communal-address-ingestion'
           package: 'HousingRepairsOnline.AddressIngestion/output'
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_COMMUNAL_PRODUCTION }}
-
