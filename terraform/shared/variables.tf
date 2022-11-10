@@ -58,7 +58,7 @@ variable "address-type" {
   description = "Type of address data"
 
   validation {
-    condition     = contains(["tenant", "communal"], var.address-type)
-    error_message = "Address type must be tenant or communal."
+    condition     = contains(["tenant", "communal", "leasehold"], var.address-type)
+    error_message = "Address type must be tenant, leasehold or communal."
   }
 }
