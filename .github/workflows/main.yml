@@ -73,6 +73,8 @@ jobs:
           echo "tenant-csv-blob-path-staging          = \"${{ secrets.TENANT_CSV_BLOB_PATH_STAGING }}\"" >> env.tfvars
           echo "communal-csv-blob-path-production     = \"${{ secrets.COMMUNAL_CSV_BLOB_PATH_PRODUCTION }}\"" >> env.tfvars
           echo "communal-csv-blob-path-staging        = \"${{ secrets.COMMUNAL_CSV_BLOB_PATH_STAGING }}\"" >> env.tfvars
+          echo "leasehold-csv-blob-path-production     = \"${{ secrets.LEASEHOLD_CSV_BLOB_PATH_PRODUCTION }}\"" >> env.tfvars
+          echo "leasehold-csv-blob-path-staging        = \"${{ secrets.LEASEHOLD_CSV_BLOB_PATH_STAGING }}\"" >> env.tfvars
           echo "partition-key                         = \"${{ secrets.PARTITION_KEY }}\"" >> env.tfvars
           echo "housing-provider                      = \"${{ secrets.HOUSING_PROVIDER }}\"" >> env.tfvars
           echo "cosmos-account-name                   = \"${{ secrets.COSMOS_ACCOUNT_NAME }}\"" >> env.tfvars
@@ -128,6 +130,14 @@ jobs:
           package: 'HousingRepairsOnline.AddressIngestion/output'
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_COMMUNAL_STAGING}}
 
+      - name: 'Run Azure Leasehold Staging Function action'
+        uses: Azure/functions-action@v1
+        with:
+          app-name: 'hro-leasehold-address-ingestion'
+          slot-name: 'leasehold-staging'
+          package: 'HousingRepairsOnline.AddressIngestion/output'
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_LEASEHOLD_STAGING}}
+
   build-and-deploy-production:
     name: "Build and Deploy Production Azure function code"
     runs-on: ubuntu-latest
@@ -164,3 +174,10 @@ jobs:
           app-name: 'hro-communal-address-ingestion'
           package: 'HousingRepairsOnline.AddressIngestion/output'
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_COMMUNAL_PRODUCTION }}
+
+      - name: 'Run Azure Leasehold Production Function action'
+        uses: Azure/functions-action@v1
+        with:
+          app-name: 'hro-leasehold-address-ingestion'
+          package: 'HousingRepairsOnline.AddressIngestion/output'
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_LEASEHOLD_PRODUCTION }}

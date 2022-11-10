@@ -38,6 +38,16 @@ variable "tenant-csv-blob-path-staging" {
   description = "Path to staging tenant address data CSV"
 }
 
+variable "leasehold-csv-blob-path-production" {
+  type        = string
+  description = "Path to production leasehold address data CSV"
+}
+
+variable "leasehold-csv-blob-path-staging" {
+  type        = string
+  description = "Path to staging leasehold address data CSV"
+}
+
 variable "partition-key" {
   type        = string
   description = "Partition key"
