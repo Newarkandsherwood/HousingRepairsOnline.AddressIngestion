@@ -62,18 +62,18 @@ module "communal_address_ingestion" {
 }
 
 module "leasehold_address_ingestion" {
-    source = "./shared"
+  source = "./shared"
 
-    address-type                       = "leasehold"
-    location                           = var.location
-    resource-group                     = var.resource-group
-    storage-account                    = var.storage-account
-    storage-account-primary-access-key = var.storage-account-primary-access-key
-    csv-blob-path-production           = var.leasehold-csv-blob-path-production
-    csv-blob-path-staging              = var.leasehold-csv-blob-path-staging
-    partition-key                      = var.partition-key
-    housing-provider                   = var.housing-provider
-    cosmos-account-name                = var.cosmos-account-name
-    database-name                      = azurerm_cosmosdb_sql_database.hro-addresses.name
-    service-plan-id                    = azurerm_service_plan.ingest-addresses.id
+  address-type                       = "leasehold"
+  location                           = var.location
+  resource-group                     = var.resource-group
+  storage-account                    = var.storage-account
+  storage-account-primary-access-key = var.storage-account-primary-access-key
+  csv-blob-path-production           = var.leasehold-csv-blob-path-production
+  csv-blob-path-staging              = var.leasehold-csv-blob-path-staging
+  partition-key                      = var.partition-key
+  housing-provider                   = var.housing-provider
+  cosmos-account-name                = var.cosmos-account-name
+  database-name                      = azurerm_cosmosdb_sql_database.hro-addresses.name
+  service-plan-id                    = azurerm_service_plan.ingest-addresses.id
 }
